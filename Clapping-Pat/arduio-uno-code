@@ -1,0 +1,83 @@
+// Jean Zhang _ jeanthebean.org
+// Project - "Clapping Pat"
+// 2017.10.15
+
+//Set up for the pins
+const int hand1 = 4;
+const int hand2 = 5;
+const int ambientLight = A0;
+const int button = 8;
+
+//Set up some variables to be used later in the code
+bool buttonPush = true;
+int clapTime = 10;
+int brightness = 0; 
+//the reason it is set as brightness is because I used a photoresistor initially,
+// and the photoresisor doesn't work very well in the environment
+
+
+void setup() {
+  // put your setup code here, to run once:
+ // Set pins for INPUT and OUTPUT:
+  pinMode(hand1, OUTPUT);
+  pinMode(hand2, OUTPUT);
+  pinMode(button, INPUT);
+
+  Serial.begin(115200);
+
+}
+
+void loop() {
+  // put your main code here, to run repeatedly:
+
+  brightness = analogRead(ambientLight);
+  Serial.println(brightness);
+  
+  if (brightness <100){
+    clapTime = 30;
+    Serial.print(" in 10 ");
+  }
+  if (100 <= brightness and brightness <300){
+    clapTime = 60;
+    Serial.print(" in 20 ");
+  }
+  if (300 <= brightness  and brightness <600){
+    clapTime = 90;
+    Serial.print(" in 30 ");
+  }
+  if (600 <= brightness  and brightness <900){
+    clapTime = 120;
+    Serial.print(" in 40 ");
+  }
+  if ( brightness >= 900 ){
+    clapTime = 150;
+    Serial.print(" in 50 ");
+  }
+  
+  
+  if (digitalRead(button) == HIGH) {
+    buttonPush = !buttonPush;
+    
+    Serial.print("ButtonPush = ");
+    Serial.print(buttonPush);
+    Serial.print("  Light=");
+    Serial.print(brightness);
+    Serial.print("  ClapTime=");
+    Serial.println(clapTime);
+    delay(100);
+  }
+  switch (buttonPush) {
+    case true:
+      digitalWrite(hand1, HIGH);
+      digitalWrite(hand2, HIGH);
+      delay(100);
+      digitalWrite(hand1, LOW);
+      digitalWrite(hand2, LOW);
+      delay (clapTime);
+
+    case false:
+      digitalWrite(hand1, HIGH);
+      digitalWrite(hand2, HIGH);
+
+  }
+}
